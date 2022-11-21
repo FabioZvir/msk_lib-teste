@@ -1,0 +1,4 @@
+analyzer:
+  exclude:
+    - lib/app/shared/bd/model.g.dart
+    

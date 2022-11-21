@@ -1,0 +1,12 @@
+export 'return_firebase_request.dart';
+export 'coluna.dart';
+export 'colunas_imagens.dart';
+export 'fk.dart';
+export 'request_sync.dart';
+export 'result_local_sync.dart';
+export 'result_sync.dart';
+export 'setar_fk.dart';
+export 'sync.dart';
+export 'tabela.dart';
+export 'tabela_itens.dart';
+export 'tipo_coluna.dart';
