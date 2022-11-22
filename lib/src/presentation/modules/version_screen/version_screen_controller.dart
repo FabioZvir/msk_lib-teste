@@ -78,13 +78,7 @@ abstract class _VersionScreenBase with Store {
         authService.getUser().then((usuario) async {
           if (usuario == null) {
             Navigator.maybeOf(context)?.pushReplacement(new MaterialPageRoute(
-                builder: (BuildContext context) => new LoginPage(height: 550,
-                width: 500,
-                sizeImage: 90,
-                widthButton: 180,
-                heightButton: 45,
-                fontSize: 26,
-                padding: 20,
+                builder: (BuildContext context) => new LoginPage(
                 title: 'Gestão Florestal',
                 image: 'images/gestao_icon.png',)));
           } else {
@@ -105,13 +99,7 @@ abstract class _VersionScreenBase with Store {
         }).catchError((error, stackTrace) {
           UtilsSentry.reportError(error, stackTrace);
           Navigator.maybeOf(context)?.pushReplacement(new MaterialPageRoute(
-              builder: (BuildContext context) => new LoginPage(height: 550,
-                width: 500,
-                sizeImage: 90,
-                widthButton: 180,
-                heightButton: 45,
-                fontSize: 26,
-                padding: 20,
+              builder: (BuildContext context) => new LoginPage(
                 title: 'Gestão Florestal',
                 image: 'images/gestao_icon.png',)));
         });

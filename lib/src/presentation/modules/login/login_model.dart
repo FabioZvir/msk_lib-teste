@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:msk/msk.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginModel extends StatefulWidget {
   final double height;
   final double width;
   final double sizeImage;
@@ -12,24 +14,32 @@ class LoginPage extends StatefulWidget {
   final double padding;
   final String title;
   final String image;
-  const LoginPage(
-      {Key? key,
-      required this.height,
-      required this.width,
-      required this.sizeImage,
-      required this.widthButton,
-      required this.heightButton,
-      required this.fontSize,
-      required this.padding,
-      required this.title,
-      required this.image})
-      : super(key: key);
+  const LoginModel({
+    Key? key,
+    required this.height,
+    required this.width,
+    required this.sizeImage,
+    required this.widthButton,
+    required this.heightButton,
+    required this.fontSize,
+    required this.padding,
+    required this.title,
+    required this.image,
+  }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginModelState createState() => _LoginModelState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginModelState extends State<LoginModel> {
+  final FocusNode _userFocus = FocusNode();
+  final FocusNode _passFocus = FocusNode();
+  final _controller = LoginModule.to.bloc<LoginController>();
+
+  void onShowErroMessage(BuildContext context) {
+    showSnack(context, _controller.errorMessage);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,10 +104,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             labelText: 'Insira seu usuário',
                           ),
-                          // controller: _controller.controllerUser,
+                          controller: _controller.controllerUser,
                           textInputAction: TextInputAction.next,
                           onFieldSubmitted: (text) {
-                            // _fieldFocusChange(context, _userFocus, _passFocus);
+                            _fieldFocusChange(context, _userFocus, _passFocus);
                           },
                         ),
                       ),
@@ -107,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                             horizontal: widget.padding * 1.5,
                           ),
                           child: TextFormField(
-                              // focusNode: _passFocus,
-                              // obscureText: !_controller.exibirSenha,
+                              focusNode: _passFocus,
+                              obscureText: !_controller.exibirSenha,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor:
@@ -123,21 +133,21 @@ class _LoginPageState extends State<LoginPage> {
                                     : Colors.black,
                                 suffixIcon: GestureDetector(
                                   onTap: () {
-                                    // _controller.exibirSenha =
-                                    // !_controller.exibirSenha;
+                                    _controller.exibirSenha =
+                                        !_controller.exibirSenha;
                                   },
-                                  child: const Icon(
-                                      // _controller.exibirSenha
-                                      Icons.visibility
-                                      // : Icons.visibility_off,
-                                      ),
+                                  child: Icon(
+                                    _controller.exibirSenha
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
                                 ),
                               ),
-                              // controller: _controller.controllerPassword,
+                              controller: _controller.controllerPassword,
                               textInputAction: TextInputAction.done,
                               onFieldSubmitted: (term) {
-                                // _passFocus.unfocus();
-                                // _login(context);
+                                _passFocus.unfocus();
+                                _login(context);
                               }),
                         ),
                       ),
@@ -153,16 +163,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _botaoLogin(BuildContext context) {
-    // if (!_controller.logando) {
-    return ElevatedButton(
+    if (!_controller.logando) {
+      return ElevatedButton(
         style: ButtonStyle(
-            minimumSize:
-                MaterialStateProperty.all(Size(widget.widthButton, widget.heightButton)),
-            backgroundColor: MaterialStateProperty.all(
-              const Color.fromRGBO(31, 111, 150, 1),
+          minimumSize: MaterialStateProperty.all(
+              Size(widget.widthButton, widget.heightButton)),
+          backgroundColor: MaterialStateProperty.all(
+            const Color.fromRGBO(31, 111, 150, 1),
+          ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(widget.padding * 0.3),
             ),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(widget.padding * 0.3)))),
+          ),
+        ),
         onPressed: () async {},
         child: Text(
           "ENTRAR",
@@ -173,9 +187,34 @@ class _LoginPageState extends State<LoginPage> {
               fontSize: widget.fontSize * 0.7,
             ),
           ),
-        ));
-    // } else {
-    //   return CircularProgressIndicator();
+        ),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
+  }
+
+  _login(BuildContext context) async {
+    if (!_controller.verificarDados()) {
+      onShowErroMessage(context);
+    } else {
+      var user = await _controller.logar();
+      if (user == null) {
+        showSnack(context, 'Ops, houve uma falha na tentativa de login');
+      } else {
+        if (UtilsMigration.appMigrado(GetIt.I.get<App>().package)) {
+          Navigator.maybeOf(context)?.pushReplacement(new MaterialPageRoute(
+              builder: (BuildContext context) => new MigracaoSyncModule()));
+        } else {
+          /// Só inicializa se o app não for migrado, a MigracaoModule ja faz isso
+          await UtilsData.inicializarBD();
+          if (!UtilsPlatform.isWeb) {
+            UtilsSync.atualizarDados();
+          }
+          GetIt.I.get<App>().loginFinalizado(context);
+        }
+      }
+    }
   }
 
   _fieldFocusChange(
