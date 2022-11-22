@@ -56,7 +56,7 @@ dependencies:
       #ref: 7249dba8074ae4c42394a998b07b31133c9e12ff
   url_launcher: ^6.0.9
   flutter_local_notifications: ^9.2.0
-  firebase_messaging: ^10.0.5
+  firebase_messaging: ^13.0.4 # previously I only had this which was pulling in 4.5.2 which you do not want
   #versao funcionando no IOS
   #firebase_messaging: ^6.0.13
   sprintf: ^6.0.0
