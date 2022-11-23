@@ -357,7 +357,6 @@ class AtualizarDados extends bp.Disposable {
           .toList();
       int pos = -1;
 
-      /// TODO verificar se os registros estão ordenados pela coluna
       if (useUniqueKey) {
         pos = getIndexColumn(listas[tabela.nome] as List<Map<dynamic, dynamic>>,
             map["uniqueKey"], 'uniqueKey');

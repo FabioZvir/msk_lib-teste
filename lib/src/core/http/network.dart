@@ -29,7 +29,6 @@ class API {
     ConnectivityResult result = await (Connectivity().checkConnectivity());
     try {
       //caso seja null ou tenha conexao, faz a requisicao
-      /// TODO Remover quando o problema com a lib for resolvido no mac
       if (result != ConnectivityResult.none || UtilsPlatform.isMacos) {
         return await _post<T>(baseUrl, endPoint!,
             data: data,
@@ -117,7 +116,6 @@ class API {
   static Future<bool> isConnected() async {
     ConnectivityResult result = await Connectivity().checkConnectivity();
     try {
-      /// TODO Remover quando o problema com a lib for resolvido no mac
       return result != ConnectivityResult.none || UtilsPlatform.isMacos;
     } catch (error, stackTrace) {
       UtilsSentry.reportError(error, stackTrace);

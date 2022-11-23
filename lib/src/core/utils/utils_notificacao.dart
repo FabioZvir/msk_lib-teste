@@ -3,7 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void showNotification(String? title, String? body, String action,
     {BuildContext? buildContext,
-    SelectNotificationCallback? notificacaoSelecionada}) {
+    DarwinNotificationCategory? notificacaoSelecionada}) {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       inicializarNotificacoes(notificacaoSelecionada: notificacaoSelecionada);
 
@@ -14,7 +14,7 @@ void showNotification(String? title, String? body, String action,
       priority: Priority.high,
       ticker: 'ticker');
 
-  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics);
@@ -23,23 +23,22 @@ void showNotification(String? title, String? body, String action,
 }
 
 FlutterLocalNotificationsPlugin inicializarNotificacoes(
-    {SelectNotificationCallback? notificacaoSelecionada}) {
+    {DarwinNotificationCategory? notificacaoSelecionada}) {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   var initializationSettingsAndroid =
       new AndroidInitializationSettings('icon_msk_notification');
 
-  var initializationSettingsIOS = new IOSInitializationSettings(
+  var initializationSettingsIOS = new DarwinInitializationSettings(
       onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
-  var initializationSettingsMacos = new MacOSInitializationSettings();
+  var initializationSettingsMacos = new DarwinInitializationSettings();
 
   var initializationSettings = new InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
       macOS: initializationSettingsMacos);
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (notificacaoSelecionada ?? onSelectNotification));
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
   return flutterLocalNotificationsPlugin;
 }
 

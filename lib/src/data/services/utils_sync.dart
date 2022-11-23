@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import '';
 import 'package:get_it/get_it.dart';
 import 'package:msk/msk.dart';
 import 'package:msk/src/data/data_access/local/sql/model.dart';
 import 'package:sqfentity/sqfentity.dart';
+
 
 class UtilsSync {
   static Future<bool> enviarDados(
@@ -60,7 +62,7 @@ class UtilsSync {
           progress: progresso,
           playSound: false,
         );
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+        var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
         var platformChannelSpecifics = NotificationDetails(
             android: androidPlatformChannelSpecifics,
             iOS: iOSPlatformChannelSpecifics);
@@ -87,7 +89,7 @@ class UtilsSync {
             playSound: false,
             importance: Importance.defaultImportance,
             priority: Priority.defaultPriority);
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+        var iOSPlatformChannelSpecifics = DarwinNotificationDetails();
         var platformChannelSpecifics = NotificationDetails(
             android: androidPlatformChannelSpecifics,
             iOS: iOSPlatformChannelSpecifics);

@@ -25,7 +25,7 @@ class TratarNotificacoes {
 
   static onMessageReceived(RemoteMessage remoteMessage,
       {Function? inicializar,
-      SelectNotificationCallback? notificacaoSelecionada}) async {
+      DarwinNotificationCategory? notificacaoSelecionada}) async {
     if (remoteMessage.data.containsKey("tipo")) {
       switch (remoteMessage.data["tipo"].toString().toInt()) {
         case EXECUTAR_QUERY_UPDATE:
