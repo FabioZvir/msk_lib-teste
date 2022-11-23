@@ -44,7 +44,7 @@ dependencies:
     
 
   after_layout: ^1.1.0
-  firebase_core: "1.10.0"
+  firebase_core: ^2.2.0
   package_info: ^2.0.2
   image_picker: ^0.8.3
   msk_utils: ">=1.0.4"
